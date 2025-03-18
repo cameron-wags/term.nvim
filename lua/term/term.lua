@@ -9,12 +9,14 @@ M.state = {
 
 -- wipes all traces of the terminal so that sessions won't persist us
 function M.kill_term()
-	if M.state.term_win then
+	if M.state.term_win and vim.api.nvim_win_is_valid(M.state.term_win) then
 		vim.api.nvim_win_close(M.state.term_win, true)
 	end
 	M.state.term_win = nil
 
-	vim.api.nvim_buf_delete(M.state.term_buf, { force = true })
+	if M.state.term_buf and vim.api.nvim_buf_is_valid(M.state.term_buf) then
+		vim.api.nvim_buf_delete(M.state.term_buf, { force = true })
+	end
 	M.state.term_buf = nil
 
 	if M.state.term_id then
